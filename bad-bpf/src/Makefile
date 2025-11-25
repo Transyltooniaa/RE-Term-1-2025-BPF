@@ -24,7 +24,7 @@ INCLUDES := -I$(OUTPUT) -I../libbpf/include/uapi -I$(dir $(VMLINUX)) -I$(LIBBLAZ
 CFLAGS := -g -Wall
 ALL_LDFLAGS := $(LDFLAGS) $(EXTRA_LDFLAGS)
 
-APPS = bpfdos exechijack pidhide sudoadd textreplace textreplace2 writeblocker writeintercept
+APPS = bpfdos exechijack pidhide sudoadd textreplace textreplace2 writeblocker
 HELPERS = hijackee
 
 # Get Clang's default includes on this system. We'll explicitly add these dirs

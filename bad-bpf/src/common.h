@@ -1,9 +1,7 @@
-// common.h
 // SPDX-License-Identifier: BSD-3-Clause
 #ifndef BAD_BPF_COMMON_H
 #define BAD_BPF_COMMON_H
-#include <stdint.h>
-#include <stdbool.h>
+
 // These are used by a number of
 // different programs to sync eBPF Tail Call
 // login between user space and kernel
@@ -15,7 +13,6 @@
 #define FILENAME_LEN_MAX 50
 #define TEXT_LEN_MAX 20
 #define LOCAL_BUFF_SIZE 64
-#define MAX_BUF 128
 // NOTE: This should probably be a map-of-maps, with the top-level
 // key bing pid_tgid, so we know we're looking at the right program
 #define MAX_POSSIBLE_ADDRS 300
@@ -27,13 +24,6 @@ struct event {
     int pid;
     char comm[TASK_COMM_LEN];
     bool success;
-};
-
-struct write_event {
-    uint32_t pid;
-    uint32_t fd;
-    uint64_t count;
-    char data[MAX_BUF];
 };
 
 struct tr_file {

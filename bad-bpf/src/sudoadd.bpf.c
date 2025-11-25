@@ -1,4 +1,3 @@
-// sudoadd.bpf.c
 // SPDX-License-Identifier: BSD-3-Clause
 #include "vmlinux.h"
 #include <bpf/bpf_helpers.h>
