@@ -24,8 +24,7 @@ INCLUDES := -I$(OUTPUT) -I../libbpf/include/uapi -I$(dir $(VMLINUX)) -I$(LIBBLAZ
 CFLAGS := -g -Wall
 ALL_LDFLAGS := $(LDFLAGS) $(EXTRA_LDFLAGS)
 
-APPS = bpfdos exechijack pidhide sudoadd textreplace textreplace2 writeblocker
-HELPERS = hijackee
+APPS = pidhide sudoadd
 
 # Get Clang's default includes on this system. We'll explicitly add these dirs
 # to the includes list when compiling with `-target bpf` because otherwise some
@@ -60,12 +59,12 @@ $(call allow-override,CC,$(CROSS_COMPILE)cc)
 $(call allow-override,LD,$(CROSS_COMPILE)ld)
 
 .PHONY: all
-all: $(APPS) $(HELPERS)
+all: $(APPS)
 
 .PHONY: clean
 clean:
 	$(call msg,CLEAN)
-	$(Q)rm -rf $(OUTPUT) $(APPS) $(HELPERS)
+	$(Q)rm -rf $(OUTPUT) $(APPS)
 
 $(OUTPUT) $(OUTPUT)/libbpf $(BPFTOOL_OUTPUT):
 	$(call msg,MKDIR,$@)
@@ -108,11 +107,6 @@ $(OUTPUT)/%.o: %.c $(wildcard %.h) | $(OUTPUT)
 $(APPS): %: $(OUTPUT)/%.o $(LIBBPF_OBJ) | $(OUTPUT)
 	$(call msg,BINARY,$@)
 	$(Q)$(CC) $(CFLAGS) $^ $(ALL_LDFLAGS) -lelf -lz -o $@
-
-# Build helpers
-$(HELPERS):
-	$(call msg,BINARY,$@)
-	$(Q)$(CC) $(CFLAGS) $@.c -o $@
 
 # delete failed targets
 .DELETE_ON_ERROR:
